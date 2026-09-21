@@ -4,14 +4,15 @@
 
 ### See your server. Run nothing on it.
 
-**Kubo** is a Windows app that connects to **your own Linux server** over SSH and turns it into
-something you can *look at* — live performance, what is really exposed, your files, Docker, Redis,
-packages — drawn in particles instead of packed into tables.
+**Kubo** is a desktop app that connects to **your own Linux server** over SSH and turns it into
+something you can *look at* — live performance, what is really exposed, your files, your services,
+Docker, Redis, packages — drawn in particles instead of packed into tables.
 
 **Nothing is installed on the server. Nothing ever leaves your machine.**
 
 [**⬇ Download for Windows**](https://github.com/Lightminedust/Kubo/releases/latest) &nbsp;·&nbsp;
-Windows 10 / 11 &nbsp;·&nbsp; brings its own Java &nbsp;·&nbsp; ~75 MB
+[**⬇ For Linux**](https://github.com/Lightminedust/Kubo/releases/latest) &nbsp;·&nbsp;
+brings its own Java &nbsp;·&nbsp; ~75 MB
 
 <img src="images/files-home.png" alt="Kubo — the file manager" width="90%">
 
@@ -52,6 +53,25 @@ Ports branch off by how far they can truly be reached — exposed, open, shielde
 so an open database screams and a loopback-only port stays quiet. Reads whichever firewall you run:
 **UFW, firewalld, nftables or iptables**.
 
+### Services — is it running, and will it come back
+<img src="images/services.png" alt="Kubo — services" width="90%">
+
+A terminal answers those as two separate questions, and nobody asks both about forty services. So a
+server can run for months with something important that will simply not be there after the next
+reboot. Kubo asks both for every unit and sorts them by what the two answers add up to: **failed**,
+**won't survive a reboot**, **enabled but not running**, **running**, **idle** — each its own
+colour. Click one and the tree keeps growing to the right: what holds it up, then what it holds up.
+
+Start, stop, restart, enable, disable. Cap a runaway service's memory or its share of the processor
+without restarting it. Send it a signal. Give it settings of its own in a drop-in, so the file your
+package shipped is never touched. Write a whole new service with the file tree right there to pick
+what it runs. And delete one — but only a unit somebody put in `/etc/systemd/system` by hand, never
+a file that belongs to a package.
+
+Stopping or disabling **sshd**, or the network under it, is refused outright rather than confirmed.
+That is the one mistake with no way back: the server keeps running, perfectly healthy, and you can
+never reach it again.
+
 ### The rest
 
 | | |
@@ -87,10 +107,20 @@ faith.
 
 ## Install
 
-1. Download the latest **[Kubo Setup](https://github.com/Lightminedust/Kubo/releases/latest)**.
-2. Run it. Windows may show a *"unknown publisher"* notice (the installer isn't code-signed yet) —
-   choose **More info → Run anyway**.
-3. Launch Kubo from the Start menu, enter your server (`user@host`), and connect.
+**Windows** — download **[Kubo Setup](https://github.com/Lightminedust/Kubo/releases/latest)** and
+run it. Windows may show an *"unknown publisher"* notice (the installer isn't code-signed yet) —
+choose **More info → Run anyway**. Then launch Kubo from the Start menu.
+
+**Linux** — a `.deb` for Debian and Ubuntu, an `.rpm` for Fedora, RHEL, Rocky, Alma and openSUSE,
+both on the [releases page](https://github.com/Lightminedust/Kubo/releases/latest). One note: Windows
+has DPAPI to encrypt a secret for one account, and Linux has no equivalent every machine is
+guaranteed to have — so Kubo simply does not store passwords there, rather than writing one
+somewhere it could be read. Key files are still remembered by their path.
+
+**Neither** — the portable editions, a `.zip` and a `.tar.gz`, unfold anywhere and need no installer
+and no administrator. Nothing is written to the registry or to `/usr`, and nothing is left behind.
+
+Then enter your server (`user@host`) and connect.
 
 **Your server** just needs to be a normal Linux box with GNU coreutils and `ss` — Debian, Ubuntu,
 RHEL, Rocky, Alma, Fedora, Arch, openSUSE… all work. *Packages* needs apt/dpkg (Debian family);
@@ -101,7 +131,8 @@ every other screen works anywhere.
 ## About
 
 Kubo is a **[Gemmie](mailto:nellawassi@gmail.com)** product, free to use. It is proprietary
-software — the source is not published here — but it collects nothing and phones no one: everything
-it does happens between your computer and your server. See [LICENSE](LICENSE.txt) for the terms.
+software — the source is not published here, and what ships is obfuscated — but it collects nothing
+and phones no one: everything it does happens between your computer and your server. See
+[LICENSE](LICENSE.txt) for the terms.
 
 *Found it useful? A ⭐ helps other people find it.*
