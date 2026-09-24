@@ -53,6 +53,40 @@ Ports branch off by how far they can truly be reached — exposed, open, shielde
 so an open database screams and a loopback-only port stays quiet. Reads whichever firewall you run:
 **UFW, firewalld, nftables or iptables**.
 
+**UFW is written as well as read.** The rules are grouped the way a person would say them, v4 and v6
+together. Open a port to one address rather than to everyone, close one, switch the whole firewall on
+or off. Removing a rule that would cut your own SSH session asks you to type the port first, and
+switching a firewall on that has nothing allowing SSH asks the same question UFW asks itself — the one
+a session with no terminal cannot answer.
+
+### Nginx — how a request actually gets there
+<img src="images/nginx.png" alt="Kubo — nginx" width="90%">
+
+Its own screen, not a panel. The sites on the left; for the one you pick, the path a request takes drawn
+as a chain that goes red at the step that breaks: the domain, the server block, the certificate, the
+rule, the port it ends on. Its access and error logs, the file it lives in, the upstream pool it
+forwards to and which members are answering.
+
+A new site is written from a form with presets for Node, a single-page app, static files or PHP. Every
+field is checked before anything is sent, the file is shown exactly as it will be written, and it goes
+out through a temporary file and a move.
+
+Serving the web with **Caddy, Apache, Traefik or HAProxy** instead? Kubo names what it finds, says where
+its configuration lives and gives you the command to check it, rather than reporting that there is no
+Nginx — which reads as no web server at all.
+
+### Blocked — everything the server has shut out
+<img src="images/blocked.png" alt="Kubo — blocked addresses" width="90%">
+
+Two hundred addresses each banned once is a machine doing its job. Five banned eleven times each is
+somebody who has decided to get in, and the two look identical from a number.
+
+One row per address, sorted by which of them keep coming back, with when, how often, how long is left
+and who owns it. fail2ban's client names what is banned right now; its database knows the dates and the
+counts. Firewall rules are in the same list, marked as what they are: a ban lets go by itself, a rule
+stays until somebody removes it. The whole journal downloads as JSON — addresses and counts only, never
+a log line.
+
 ### Services — is it running, and will it come back
 <img src="images/services.png" alt="Kubo — services" width="90%">
 
@@ -79,7 +113,8 @@ never reach it again.
 | ![Scope](images/scope-busy.png) | **Scope** — the machine itself: OS, kernel, CPU, RAM, drawn as a spinning particle sphere with memory, swap, load and steal around it. |
 | ![Docker](images/docker.png) | **Docker** — containers, state, CPU/memory, ports and volumes; start/stop/restart, logs, a shell inside, and a read-only browse of the container's files. |
 | ![Redis](images/redis.png) | **Redis** — a stack of lit slabs, one per type, with full key CRUD, JSON edit, memory profiling, SLOWLOG and a live CLI. Never runs `KEYS *`. |
-| ![Packages](images/packages-open.png) | **Packages** — everything apt/dpkg report as a branching tree: what's for the system, what you asked for, what's waiting. Install and upgrade, simulated first. |
+| ![Packages](images/packages-open.png) | **Packages** — everything apt/dpkg report as a branching tree: what's for the system, what you asked for, what's waiting. Upgrades are watched as they happen, simulated first, and what a removal would take with it is said before you confirm. The repositories a machine fetches from, and the signing keys behind them, are on their own screen. |
+| ![Restart](images/restart.png) | **What is still running on old libraries** — upgrading a library writes a new file; anything already running keeps using the old one until it is restarted. So a server can be fully patched on disk and still be serving through the flaw the patch closed. Kubo lists which services those are, with a button each, and keeps apart the two or three the machine is standing on. |
 
 And a connection screen that reads the handshake as a fall of ones and zeros:
 
