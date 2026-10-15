@@ -2,172 +2,160 @@
 
 # Kubo
 
-### See your server. Run nothing on it.
+### Manage your Linux server from a window, not just a terminal.
 
-**Kubo** is a desktop app that connects to **your own Linux server** over SSH and turns it into
-something you can *look at* — live performance, what is really exposed, your files, your services,
-Docker, Redis, packages — drawn in particles instead of packed into tables.
+Kubo is a free desktop app for **Windows and Linux**. It connects to **your own Linux server** over SSH
+and shows you what is going on: files, open ports, firewall, websites, services, Docker, Redis, packages.
 
-**Nothing is installed on the server. Nothing ever leaves your machine.**
+**Nothing is installed on your server. Nothing is sent anywhere else.**
 
 [**⬇ Download for Windows**](https://github.com/Lightminedust/Kubo/releases/latest) &nbsp;·&nbsp;
-[**⬇ For Linux**](https://github.com/Lightminedust/Kubo/releases/latest) &nbsp;·&nbsp;
-brings its own Java &nbsp;·&nbsp; ~75 MB
+[**⬇ Download for Linux**](https://github.com/Lightminedust/Kubo/releases/latest) &nbsp;·&nbsp;
+[Website](https://kubo.gemmi-e.com) &nbsp;·&nbsp; Java included &nbsp;·&nbsp; ~75 MB
 
-<img src="images/files-home.png" alt="Kubo — the file manager" width="90%">
+<img src="images/files-home.png" alt="Kubo's file manager: the server's folders shown as a tree you can browse" width="90%">
 
 </div>
 
 ---
 
-## Why Kubo
+## Who it's for
 
-You already have a terminal. Kubo doesn't replace it — it sits beside it, so you can manage a
-container on a map *and* in a shell at the same time, and the log shows you both. It's built for
-the person who runs one server and wants to actually understand it, not decode it.
+You rented a VPS, set up a Raspberry Pi, or run a small server for a website, a bot or a game. You can use
+the terminal, but you don't want to remember twenty commands just to answer simple questions:
 
-- **Nothing installed** — Kubo only runs ordinary shell commands over SSH. No agent, no daemon,
-  nothing left behind on the server.
-- **Nothing leaves your machine** — it talks to your server and to no one else. No telemetry, no
-  account, no cloud. Your data stays yours.
-- **Every command shown** — everything Kubo sends is listed as it happens and written to a local
-  log — the commands, never their output.
+- Which ports are open, and which ones can the internet actually reach?
+- Why isn't my website answering?
+- Who keeps trying to get into my server?
+- Which services will **not** come back after a reboot?
+
+Kubo answers those questions on screen. It does not replace your terminal: it works next to it.
+
+## How it works
+
+- **Over SSH, nothing else.** Kubo runs ordinary Linux commands, the same ones you would type. There is no
+  agent, no service and no web page added to your server, and nothing is left behind when you close it.
+- **You see every command.** Everything Kubo sends is listed as it happens and saved in a log on your
+  computer. The log keeps the commands, never their output or your files.
+- **Read-only until you ask.** Looking never changes anything. When you do make a change, Kubo shows it
+  first or asks you to confirm.
+- **Private.** No account, no tracking, no cloud. Kubo only talks to your server.
 
 ---
 
-## What it does
+## What you can do
 
-Each screen is the same server told a different way. All of it read-only until you ask for a
-change, and every change simulated or confirmed first.
+### Files
 
-### Files — browse and manage, as a living tree
-The folders open left to right, one column per level, every entry a point of light on a fibre.
-Right-click to edit, rename, copy, move, set permissions, download or delete; drag files from your
-PC onto a folder to upload. Quicker to read — and to trust — than the tools most people put up with.
+Browse your server's folders as a tree. Right-click to edit, rename, copy, move, change permissions,
+download or delete. Drag a file from your PC onto a folder to upload it.
 
-### Network — see what is really exposed
-<img src="images/network.png" alt="Kubo — network" width="90%">
+### Network: what is really exposed
 
-The internet on one side, your server on the other, the firewall as a pane of glass between them.
-Ports branch off by how far they can truly be reached — exposed, open, shielded, private, local —
-so an open database screams and a loopback-only port stays quiet. Reads whichever firewall you run:
-**UFW, firewalld, nftables or iptables**.
+<img src="images/network.png" alt="Kubo's network screen: the internet on one side, the server on the other, the firewall in between" width="90%">
 
-**UFW is written as well as read.** The rules are grouped the way a person would say them, v4 and v6
-together. Open a port to one address rather than to everyone, close one, switch the whole firewall on
-or off. Removing a rule that would cut your own SSH session asks you to type the port first, and
-switching a firewall on that has nothing allowing SSH asks the same question UFW asks itself — the one
-a session with no terminal cannot answer.
+See every open port and how far it can be reached: **open to the internet**, **blocked by the firewall**,
+or **only reachable from the server itself**. A database open to the whole internet stands out immediately.
 
-### Nginx — how a request actually gets there
-<img src="images/nginx.png" alt="Kubo — nginx" width="90%">
+Works with **UFW, firewalld, nftables and iptables**. With UFW you can also open or close ports, allow
+one address only, and switch the firewall on or off. Kubo stops you before a change that would cut off
+your own SSH connection.
 
-Its own screen, not a panel. The sites on the left; for the one you pick, the path a request takes drawn
-as a chain that goes red at the step that breaks: the domain, the server block, the certificate, the
-rule, the port it ends on. Its access and error logs, the file it lives in, the upstream pool it
-forwards to and which members are answering.
+### Websites (Nginx)
 
-A new site is written from a form with presets for Node, a single-page app, static files or PHP. Every
-field is checked before anything is sent, the file is shown exactly as it will be written, and it goes
-out through a temporary file and a move.
+<img src="images/nginx.png" alt="Kubo's Nginx screen: the path a request takes, from the domain to the program that answers" width="90%">
 
-Serving the web with **Caddy, Apache, Traefik or HAProxy** instead? Kubo names what it finds, says where
-its configuration lives and gives you the command to check it, rather than reporting that there is no
-Nginx — which reads as no web server at all.
+For each website, Kubo shows the path a visitor's request takes: domain → Nginx site → certificate →
+rule → the program or folder that answers. The step that is broken turns red. You also see the site's
+logs and its configuration file.
 
-### Blocked — everything the server has shut out
-<img src="images/blocked.png" alt="Kubo — blocked addresses" width="90%">
+You can **create a new site** from a form, with presets for a Node app, a single-page app, a static site
+or PHP. You see the exact file before it is written, and Nginx checks it before anything is switched on.
 
-Two hundred addresses each banned once is a machine doing its job. Five banned eleven times each is
-somebody who has decided to get in, and the two look identical from a number.
+Using Caddy, Apache, Traefik or HAProxy instead? Kubo tells you what it found and where its
+configuration is.
 
-One row per address, sorted by which of them keep coming back, with when, how often, how long is left
-and who owns it. fail2ban's client names what is banned right now; its database knows the dates and the
-counts. Firewall rules are in the same list, marked as what they are: a ban lets go by itself, a rule
-stays until somebody removes it. The whole journal downloads as JSON — addresses and counts only, never
-a log line.
+### Blocked addresses (fail2ban and firewall)
 
-### Services — is it running, and will it come back
-<img src="images/services.png" alt="Kubo — services" width="90%">
+<img src="images/blocked.png" alt="Kubo's blocked addresses: one row per address, sorted by how often it came back" width="90%">
 
-A terminal answers those as two separate questions, and nobody asks both about forty services. So a
-server can run for months with something important that will simply not be there after the next
-reboot. Kubo asks both for every unit and sorts them by what the two answers add up to: **failed**,
-**won't survive a reboot**, **enabled but not running**, **running**, **idle** — each its own
-colour. Click one and the tree keeps growing to the right: what holds it up, then what it holds up.
+The list of addresses your server has banned, one row each: how many times, when, how long the ban
+lasts, and who owns the address. The ones that **keep coming back** are at the top, because those are
+the ones actually trying to get in. Firewall rules are in the same list. Export it as JSON if you want.
 
-Start, stop, restart, enable, disable. Cap a runaway service's memory or its share of the processor
-without restarting it. Send it a signal. Give it settings of its own in a drop-in, so the file your
-package shipped is never touched. Write a whole new service with the file tree right there to pick
-what it runs. And delete one — but only a unit somebody put in `/etc/systemd/system` by hand, never
-a file that belongs to a package.
+### Services (systemd)
 
-Stopping or disabling **sshd**, or the network under it, is refused outright rather than confirmed.
-That is the one mistake with no way back: the server keeps running, perfectly healthy, and you can
-never reach it again.
+<img src="images/services.png" alt="Kubo's services screen: every service sorted by state, failed ones first" width="90%">
 
-### The rest
+Every service, sorted by what matters:
+
+**failed** · **running now but won't start after a reboot** · **enabled but stopped** · **running** · **idle**
+
+Start, stop, restart, enable or disable a service. Limit its memory or CPU without restarting it. Add
+your own settings without touching the original file, or create a new service.
+
+For your safety, Kubo **refuses** to stop or disable SSH, or the network under it: that is the one
+mistake that would lock you out of your own server for good.
+
+### And also
 
 | | |
 |---|---|
-| ![Scope](images/scope-busy.png) | **Scope** — the machine itself: OS, kernel, CPU, RAM, drawn as a spinning particle sphere with memory, swap, load and steal around it. |
-| ![Docker](images/docker.png) | **Docker** — containers, state, CPU/memory, ports and volumes; start/stop/restart, logs, a shell inside, and a read-only browse of the container's files. |
-| ![Redis](images/redis.png) | **Redis** — a stack of lit slabs, one per type, with full key CRUD, JSON edit, memory profiling, SLOWLOG and a live CLI. Never runs `KEYS *`. |
-| ![Packages](images/packages-open.png) | **Packages** — everything apt/dpkg report as a branching tree: what's for the system, what you asked for, what's waiting. Upgrades are watched as they happen, simulated first, and what a removal would take with it is said before you confirm. The repositories a machine fetches from, and the signing keys behind them, are on their own screen. |
-| ![Restart](images/restart.png) | **What is still running on old libraries** — upgrading a library writes a new file; anything already running keeps using the old one until it is restarted. So a server can be fully patched on disk and still be serving through the flaw the patch closed. Kubo lists which services those are, with a button each, and keeps apart the two or three the machine is standing on. |
+| ![Scope](images/scope-busy.png) | **System**: operating system, CPU, memory, swap and load, live. |
+| ![Docker](images/docker.png) | **Docker**: your containers, their state, CPU, memory, ports and volumes. Start, stop, restart, read the logs, open a shell inside. |
+| ![Redis](images/redis.png) | **Redis**: browse, edit and delete keys, see memory use and slow commands, use a live console. Never runs `KEYS *`, which can freeze a busy server. |
+| ![Packages](images/packages-open.png) | **Packages** (Debian, Ubuntu): what is installed, what you installed yourself, what can be updated. Updates are simulated first, and Kubo tells you what a removal would also remove. |
+| ![Restart](images/restart.png) | **Restart after updates**: after an update, programs already running keep the old version until they restart. Kubo lists them, so a "fully updated" server isn't still running the old, vulnerable code. |
 
-And a connection screen that reads the handshake as a fall of ones and zeros:
-
-<div align="center"><img src="images/connection-connected.png" alt="Kubo — connection" width="70%"></div>
+<div align="center"><img src="images/connection-connected.png" alt="Kubo's connection screen" width="70%"></div>
 
 ---
 
 ## Security
 
-Kubo asks for a lot — SSH access, sometimes root. So it's built so you never have to take that on
-faith.
+Kubo needs SSH access, and sometimes root. Here is how it handles that:
 
-- **Host keys, checked** — first contact shows the fingerprint and asks; a server whose key changed
-  is refused outright.
-- **Secrets held, then wiped** — passwords live in memory as raw bytes and are wiped after use.
-  Saved only if you tick *remember*, encrypted with Windows DPAPI for your account.
-- **Root only when you say so** — Kubo never elevates on its own. One button asks for sudo, once per
-  session, and every window reads `Kubo_root` while it's on.
-- **Nothing destructive by surprise** — changes are simulated or confirmed by typing the name back;
-  commands that need root are fixed templates, never built from what you type.
-- **Everything on the record** — every command is listed and logged locally: the command and its
-  size, never the output or your files.
+- **Server identity is checked.** On first connection Kubo shows the server's fingerprint and asks you.
+  If it changes later, Kubo refuses to connect.
+- **Passwords are not kept around.** They stay in memory only as long as needed, then are erased. They
+  are saved only if you tick *Remember*, encrypted for your Windows account. On Linux, Kubo never saves
+  passwords.
+- **Root only when you click for it.** Kubo never switches to root on its own. One button asks for sudo
+  once per session, and the window title shows `Kubo_root` while it is on.
+- **No surprises.** Risky changes are simulated or need you to type the name to confirm. Commands that
+  run as root are fixed in advance, never built from what you type.
 
 ---
 
 ## Install
 
-**Windows** — download **[Kubo Setup](https://github.com/Lightminedust/Kubo/releases/latest)** and
-run it. Windows may show an *"unknown publisher"* notice (the installer isn't code-signed yet) —
-choose **More info → Run anyway**. Then launch Kubo from the Start menu.
+**Windows**: download **[Kubo Setup](https://github.com/Lightminedust/Kubo/releases/latest)** and run it.
+The installer isn't code-signed yet, so Windows may say *"unknown publisher"*: click **More info → Run
+anyway**. Then open Kubo from the Start menu.
 
-**Linux** — a `.deb` for Debian and Ubuntu, an `.rpm` for Fedora, RHEL, Rocky, Alma and openSUSE,
-both on the [releases page](https://github.com/Lightminedust/Kubo/releases/latest). One note: Windows
-has DPAPI to encrypt a secret for one account, and Linux has no equivalent every machine is
-guaranteed to have — so Kubo simply does not store passwords there, rather than writing one
-somewhere it could be read. Key files are still remembered by their path.
+**Linux**: a `.deb` (Debian, Ubuntu) and an `.rpm` (Fedora, RHEL, Rocky, Alma, openSUSE) are on the
+[releases page](https://github.com/Lightminedust/Kubo/releases/latest).
 
-**Neither** — the portable editions, a `.zip` and a `.tar.gz`, unfold anywhere and need no installer
-and no administrator. Nothing is written to the registry or to `/usr`, and nothing is left behind.
+**Portable**: a `.zip` (Windows) and a `.tar.gz` (Linux). Unzip anywhere and run, no installation and no
+admin rights needed.
 
-Then enter your server (`user@host`) and connect.
+Then type your server's address (`user@host`) and connect.
 
-**Your server** just needs to be a normal Linux box with GNU coreutils and `ss` — Debian, Ubuntu,
-RHEL, Rocky, Alma, Fedora, Arch, openSUSE… all work. *Packages* needs apt/dpkg (Debian family);
-every other screen works anywhere.
+### What your server needs
+
+Any normal Linux server: Debian, Ubuntu, Raspberry Pi OS, RHEL, Rocky, Alma, Fedora, Arch, openSUSE…
+The **Packages** screen needs a Debian-based system (apt). Everything else works everywhere.
 
 ---
 
 ## About
 
-Kubo is a **[Gemmie](mailto:nellawassi@gmail.com)** product, free to use. It is proprietary
-software — the source is not published here, and what ships is obfuscated — but it collects nothing
-and phones no one: everything it does happens between your computer and your server. See
-[LICENSE](LICENSE.txt) for the terms.
+Kubo is made by **Gemmie** and is free to use. It is not open source: the code is not published, but Kubo
+collects nothing and contacts no one other than your server. See the [license](LICENSE.txt).
 
-*Found it useful? A ⭐ helps other people find it.*
+**How it was made.** Kubo is designed and built by one developer who manages Linux servers. AI tools were
+used to help with the visual style and with some of the more complex Linux commands.
+
+Questions, bugs or ideas: [gemmi-e.com/contact](https://gemmi-e.com/contact).
+
+*If Kubo is useful to you, a ⭐ on this repository helps other people find it.*
