@@ -11,7 +11,8 @@ and shows you what is going on: files, open ports, firewall, websites, services,
 
 [**⬇ Download for Windows**](https://github.com/Lightminedust/Kubo/releases/latest) &nbsp;·&nbsp;
 [**⬇ Download for Linux**](https://github.com/Lightminedust/Kubo/releases/latest) &nbsp;·&nbsp;
-[Website](https://kubo.gemmi-e.com) &nbsp;·&nbsp; Java included &nbsp;·&nbsp; ~75 MB
+[Website](https://kubo.gemmi-e.com) &nbsp;·&nbsp;
+[Source code](https://github.com/Lightminedust/kubo-app) &nbsp;·&nbsp; Java included &nbsp;·&nbsp; ~76 MB
 
 <img src="images/files-home.png" alt="Kubo's file manager: the server's folders shown as a tree you can browse" width="90%">
 
@@ -40,6 +41,9 @@ Kubo answers those questions on screen. It does not replace your terminal: it wo
 - **Read-only until you ask.** Looking never changes anything. When you do make a change, Kubo shows it
   first or asks you to confirm.
 - **Private.** No account, no tracking, no cloud. Kubo only talks to your server.
+- **And you can check that.** The [source code](https://github.com/Lightminedust/kubo-app) is published.
+  Kubo is built from three libraries: SSH, a JSON reader for the files on your own disk, and a logger.
+  There is no HTTP client in it at all, so there is nothing in it that *could* make a web request.
 
 ---
 
@@ -97,6 +101,34 @@ your own settings without touching the original file, or create a new service.
 For your safety, Kubo **refuses** to stop or disable SSH, or the network under it: that is the one
 mistake that would lock you out of your own server for good.
 
+### The terminal, and what it does instead of drawing
+
+<img src="images/shell-top.png" alt="Kubo's process table: what htop shows, as columns with a stop button on each row" width="90%">
+
+There is a terminal inside Kubo, and every command it sends goes to the log. It can **answer what a
+command asks**: a password for `git clone`, a passphrase for `ssh-keygen`, a yes or no.
+
+Some programs draw a whole screen instead of printing lines, and a console that shows lines can only show
+the drawing instructions. So Kubo answers those with the thing they were for:
+
+| You type | What you get |
+|---|---|
+| `nano /etc/hosts` | The file opens in Kubo's editor |
+| `htop`, `top`, `ps aux` | A sortable table of what is running, refreshed every three seconds, with a stop button on each row |
+| `pm2 list` | The same for pm2, with restart and stop on each row |
+| `pm2 logs`, `tail -f`, `journalctl -f` | The log opens in its own window and keeps filling while you work elsewhere, errors in red, with a filter |
+
+### Pictures, sounds and films
+
+<img src="images/media.png" alt="Kubo copying a video from the server before playing it" width="90%">
+
+A `.png`, a `.mp4` or a `.mp3` on the server opens in a small window, with a bar while it is copied to your
+computer. The arrows move through the other files of the same kind in that folder, so opening one video
+opens the folder it is in. The copy is deleted when you close the window.
+
+Kubo plays what it carries a decoder for: H.264 in MP4, AAC, MP3, WAV, AIFF, PNG, JPEG, GIF, BMP. For the
+rest, it says so and hands the file to your own computer's player rather than showing you nothing.
+
 ### And also
 
 | | |
@@ -150,8 +182,15 @@ The **Packages** screen needs a Debian-based system (apt). Everything else works
 
 ## About
 
-Kubo is made by **Gemmie** and is free to use. It is not open source: the code is not published, but Kubo
-collects nothing and contacts no one other than your server. See the [license](LICENSE.txt).
+Kubo is made by **Gemmie** and is free to use.
+
+**The source code is published**, at
+[github.com/Lightminedust/kubo-app](https://github.com/Lightminedust/kubo-app). It is there so that the
+claims on this page can be checked rather than believed: that Kubo collects nothing, contacts no one other
+than your server, and writes every command it sends to a file you can read.
+
+It is still **not open source**. The [licence](LICENSE.txt) is proprietary: you can read the code, you
+cannot redistribute or modify it.
 
 **How it was made.** Kubo is designed and built by one developer who manages Linux servers. AI tools were
 used to help with the visual style and with some of the more complex Linux commands.
