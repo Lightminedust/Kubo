@@ -1,0 +1,66 @@
+name: Publish macOS v1.4.0
+
+on:
+  push:
+    branches: [ macos-v1.4.0 ]
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15-intel
+            arch: x86_64
+            native_arch: x86_64
+          - runner: macos-15
+            arch: aarch64
+            native_arch: arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: Lightminedust/kubo-app
+          ref: a98eb49
+          path: source
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Create native icon
+        working-directory: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/kubo.iconset
+          for size in 16 32 128 256 512; do
+            sips -z "$size" "$size" assets/kubo.png --out "assets/kubo.iconset/icon_${size}x${size}.png" >/dev/null
+            double=$((size * 2))
+            sips -z "$double" "$double" assets/kubo.png --out "assets/kubo.iconset/icon_${size}x${size}@2x.png" >/dev/null
+          done
+          iconutil -c icns assets/kubo.iconset -o assets/kubo.icns
+      - name: Build, inspect and publish DMG
+        working-directory: source
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(uname -m)" = '${{ matrix.native_arch }}'
+          ./gradlew jpackage -PinstallerType=dmg -PappVersion=1.4.0 --console=plain
+          mkdir -p packages
+          cp app/build/jpackage/*.dmg "packages/Kubo-macos-${{ matrix.arch }}.dmg"
+          dmg="packages/Kubo-macos-${{ matrix.arch }}.dmg"
+          hdiutil verify "$dmg"
+          mkdir -p /tmp/kubo-dmg
+          hdiutil attach -readonly -nobrowse -mountpoint /tmp/kubo-dmg "$dmg" < <(yes qy)
+          test -x /tmp/kubo-dmg/Kubo.app/Contents/MacOS/Kubo
+          /usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' /tmp/kubo-dmg/Kubo.app/Contents/Info.plist | grep -Fx 1.4.0
+          file /tmp/kubo-dmg/Kubo.app/Contents/MacOS/Kubo
+          hdiutil detach /tmp/kubo-dmg
+          shasum -a 256 "$dmg"
+          gh release upload v1.4.0 "$dmg" --repo Lightminedust/Kubo
