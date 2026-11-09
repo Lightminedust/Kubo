@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Lightminedust/kubo-app
-          ref: a98eb49
+          ref: macos-v1.4.0
           path: source
       - uses: actions/setup-java@v4
         with:
