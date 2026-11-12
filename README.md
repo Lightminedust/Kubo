@@ -11,6 +11,7 @@ and shows you what is going on: files, open ports, firewall, websites, services,
 
 [**⬇ Download for Windows**](https://github.com/Lightminedust/Kubo/releases/latest) &nbsp;·&nbsp;
 [**⬇ Download for Linux**](https://github.com/Lightminedust/Kubo/releases/latest) &nbsp;·&nbsp;
+[**Download for macOS**](https://github.com/Lightminedust/Kubo/releases/latest) &nbsp;?&nbsp;
 [Website](https://kubo.gemmi-e.com) &nbsp;·&nbsp;
 [Source code](https://github.com/Lightminedust/kubo-app) &nbsp;·&nbsp; Java included &nbsp;·&nbsp; ~76 MB
 
