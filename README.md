@@ -4,7 +4,7 @@
 
 ### Manage your Linux server from a window, not just a terminal.
 
-Kubo is a free desktop app for **Windows and Linux**. It connects to **your own Linux server** over SSH
+Kubo is a free desktop app for **Windows, macOS and Linux**. It connects to **your own Linux server** over SSH
 and shows you what is going on: files, open ports, firewall, websites, services, Docker, Redis, packages.
 
 **Nothing is installed on your server. Nothing is sent anywhere else.**
@@ -40,10 +40,9 @@ Kubo answers those questions on screen. It does not replace your terminal: it wo
   computer. The log keeps the commands, never their output or your files.
 - **Read-only until you ask.** Looking never changes anything. When you do make a change, Kubo shows it
   first or asks you to confirm.
-- **Private.** No account, no tracking, no cloud. Kubo only talks to your server.
+- **Private.** No account, no tracking, no cloud. Kubo talks to your server over SSH and checks GitHub for updates at startup. You can disable update checks.
 - **And you can check that.** The [source code](https://github.com/Lightminedust/kubo-app) is published.
-  Kubo is built from three libraries: SSH, a JSON reader for the files on your own disk, and a logger.
-  There is no HTTP client in it at all, so there is nothing in it that *could* make a web request.
+  Kubo uses HTTPS only to check GitHub Releases and download an update you approve.
 
 ---
 
